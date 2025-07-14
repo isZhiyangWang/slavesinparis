@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Slaves in Paris: A Digital Mapping Project</title>
+  <style>
+    html, body {
+      margin: 0;
+      height: 100%;
+    }
+    .iframe-wrapper {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background: #fff; 
+    }
+    .iframe-wrapper iframe {
+      position: absolute;
+      top: -64px;                
+      left: 0;
+      width: 100%;
+      height: calc(100% + 64px); 
+      border: 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="iframe-wrapper">
+    <iframe
+      src="https://storymaps.arcgis.com/stories/f577a348b8fe425793917211804af1a1"
+      title="Slaves in Paris StoryMap"
+      allowfullscreen
+      allow="geolocation"
+      referrerpolicy="no-referrer">
+    </iframe>
+  </div>
+</body>
+</html>
