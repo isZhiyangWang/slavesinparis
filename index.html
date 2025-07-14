@@ -28,6 +28,11 @@
       border: 0;
     }
   </style>
+  <script>
+  if (location.protocol !== 'https:') {
+    location.replace('https://' + location.hostname + location.pathname + location.search);
+  }
+</script>
 </head>
 <body>
   <div class="iframe-wrapper">
