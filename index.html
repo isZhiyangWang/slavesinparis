@@ -1,41 +1,144 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
   <title>Slaves in Paris: A Digital Mapping Project</title>
+
   <style>
-    html, body {
+    /* ─── Reset ─── */
+    *, *::before, *::after {
       margin: 0;
-      height: 100%;
+      padding: 0;
+      box-sizing: border-box;
     }
-    .iframe-wrapper {
-      position: relative;
-      width: 100%;
+    html, body {
       height: 100%;
-      overflow: hidden;
-      background: #fff; 
+      overflow-x: hidden;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
     }
-    .iframe-wrapper iframe {
-      position: absolute;
-      top: -64px;                
-      left: 0;
-      width: 100%;
-      height: calc(100% + 64px); 
-      border: 0;
+    html::-webkit-scrollbar,
+    body::-webkit-scrollbar {
+      display: none;
+    }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: #fff;
+    }
+
+    /* ─── Desktop Styles (≥769px) ─── */
+    @media (min-width: 769px) {
+      .desktop-view { display: block; height: 100vh; }
+      .mobile-view  { display: none; }
+
+      .iframe-desktop {
+        position: relative;
+        width: 100%;
+        height: 100%;
+      }
+      .iframe-desktop iframe {
+        position: absolute;
+        top: -64px;
+        left: 0;
+        width: 100%;
+        height: calc(100% + 64px);
+        border: 0;
+      }
+    }
+
+    /* ─── Mobile Styles (≤768px) ─── */
+    @media (max-width: 768px) {
+      .desktop-view { display: none; }
+      .mobile-view  { display: block; }
+
+      /* Full-page scroll wrapper */
+      .page-wrapper {
+        height: 100%;
+        overflow-y: auto;
+        scroll-snap-type: y proximity; /* use proximity for smoother scroll */
+        overscroll-behavior: contain; /* prevent bounce from affecting parent */
+      }
+      .page-section {
+        height: 100vh;
+        width: 100%;
+        scroll-snap-align: start;
+      }
+
+      /* Cover */
+      .cover {
+        position: relative;
+        overflow: hidden;
+        background: #000;
+      }
+      .cover img {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        opacity: 0.85;
+      }
+      .cover h1 {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 90%;
+        max-width: 800px;
+        color: #fff;
+        text-align: center;
+        line-height: 1.2;
+        font-size: clamp(1.6rem, 5vw, 2.4rem);
+        font-weight: 700;
+        text-shadow: 2px 2px 4px #000;
+      }
+      .arrow {
+        position: absolute;
+        left: 24px;
+        bottom: 24px;
+        cursor: pointer;
+        animation: bounce 2s infinite;
+      }
+      .arrow svg {
+        width: 18px;
+        height: 26px;
+        fill: #fff;
+        filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.6));
+      }
+      @keyframes bounce {
+        0%,20%,50%,80%,100% { transform: translateY(0); }
+        40% { transform: translateY(-8px); }
+        60% { transform: translateY(-4px); }
+      }
+
+      /* StoryMap iframe */
+      .iframe-mobile-wrapper {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;           
+        overscroll-behavior: contain;
+      }
+      .iframe-mobile-wrapper iframe {
+        position: absolute;
+        top: -64px;
+        left: 0;
+        width: 100%;
+        height: calc(100% + 64px);
+        border: 0;
+        -webkit-overflow-scrolling: touch; /* enable smooth touch scroll */
+      }
+      .iframe-mobile-wrapper iframe::-webkit-scrollbar {
+        display: none;
+      }
     }
   </style>
-  <script>
-  if (location.protocol !== 'https:') {
-    location.replace('https://' + location.hostname + location.pathname + location.search);
-  }
-</script>
 </head>
 <body>
-  <div class="iframe-wrapper">
+
+  <!-- Desktop View -->
+  <div class="desktop-view iframe-desktop">
     <iframe
       src="https://storymaps.arcgis.com/stories/f577a348b8fe425793917211804af1a1"
       title="Slaves in Paris StoryMap"
@@ -44,5 +147,47 @@
       referrerpolicy="no-referrer">
     </iframe>
   </div>
+
+  <!-- Mobile View -->
+  <div class="mobile-view page-wrapper">
+    <!-- Cover Section -->
+    <section class="page-section cover" id="cover">
+      <img
+        src="./Charles-Auguste.jpg"
+        alt="Paul Grégoire, Place des Victoires, July 1786">
+      <h1>Slaves in Paris: A Digital Mapping Project</h1>
+      <div class="arrow" onclick="scrollToStoryMap()">
+        <svg viewBox="0 0 13 42">
+          <path d="M7 35.4h5.7l-6.3 6.3L0 35.4h6V0h1z"/>
+        </svg>
+      </div>
+    </section>
+
+    <!-- StoryMap Section -->
+    <section class="page-section" id="sm">
+      <div class="iframe-mobile-wrapper">
+        <iframe
+          src="https://storymaps.arcgis.com/stories/f577a348b8fe425793917211804af1a1?cover=false"
+          title="Slaves in Paris StoryMap (mobile)"
+          allowfullscreen
+          allow="geolocation"
+          referrerpolicy="no-referrer">
+        </iframe>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    // Redirect to HTTPS if needed
+    if (location.protocol !== 'https:') {
+      location.replace(`https://${location.host}${location.pathname}${location.search}`);
+    }
+
+    // Smooth scroll helper for arrow click
+    function scrollToStoryMap() {
+      document.getElementById('sm').scrollIntoView({ behavior: 'smooth' });
+    }
+  </script>
+
 </body>
 </html>
